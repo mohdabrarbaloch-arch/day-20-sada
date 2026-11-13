@@ -288,6 +288,7 @@ a:hover { text-decoration: underline; }
   gap: .9rem;
   margin-bottom: 1.1rem;
 }
+.ws-head > div:first-child { min-width: 0; flex: 1 1 200px; }
 .ws-head h2 {
   font-size: 1.1rem;
   margin: 0 0 .2rem;
@@ -301,7 +302,14 @@ a:hover { text-decoration: underline; }
   color: var(--ink-faint);
   font-family: var(--mono);
 }
-.ws-actions { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+.ws-actions {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  flex-wrap: wrap;
+  min-width: 0;
+  max-width: 100%;
+}
 
 .export-group {
   display: flex;
@@ -310,6 +318,7 @@ a:hover { text-decoration: underline; }
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   padding: 2px;
+  flex-shrink: 0;
 }
 .chip {
   font: inherit;

@@ -351,11 +351,13 @@
 
         // Meta goes in its own block so the badge and the doubted words land
         // in the same place on every line, whether or not the text wraps.
-        if (tier !== "high" || s.low_words) {
+        // The badge follows the server's `uncertain` flag, not the colour tier
+        // — otherwise the header count and the badges disagree.
+        if (s.uncertain || s.low_words) {
           const meta = document.createElement("span");
           meta.className = "seg-meta";
 
-          if (tier !== "high") {
+          if (s.uncertain) {
             const flag = document.createElement("span");
             flag.className = "seg-flag";
             flag.textContent = tier === "low" ? "check" : "unsure";
@@ -368,10 +370,15 @@
           }
 
           // Name the actual words the model doubted — that is the whole point.
+          // A line can have a doubtful word without being flagged for review
+          // (the rest of it was solid), so label that case differently rather
+          // than leaving a bare "doubted:" with no badge next to it.
           if (s.low_words) {
             const words = document.createElement("span");
             words.className = "seg-words";
-            words.textContent = `doubted: ${s.low_words}`;
+            words.textContent = s.uncertain
+              ? `doubted: ${s.low_words}`
+              : `one word unsure: ${s.low_words}`;
             meta.appendChild(words);
           }
 

@@ -94,7 +94,10 @@ class TranscriptionEngine:
             beam_size=settings.whisper_beam_size,
             language=language or None,
             vad_filter=True,
-            vad_parameters={"min_silence_duration_ms": 500},
+            # 500ms was dropping the last word of a file: the trailing silence
+            # got trimmed along with the word before it. 2000ms keeps the tail
+            # intact and still removes long dead air.
+            vad_parameters={"min_silence_duration_ms": 2000},
             word_timestamps=True,
         )
 

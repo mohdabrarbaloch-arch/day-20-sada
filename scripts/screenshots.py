@@ -42,10 +42,23 @@ async def main() -> int:
         await page.screenshot(path=OUT / "transcript.png")
         print("transcript.png")
 
-        # scroll to the transcript for a tighter shot
+        # A tighter shot clipped to the workspace element. scrollIntoView alone
+        # produced a byte-identical copy of the full-page shot, so clip instead.
+        # The box is padded so the header buttons are not cut off at the edge.
         await page.evaluate("document.getElementById('workspace').scrollIntoView()")
         await page.wait_for_timeout(500)
-        await page.screenshot(path=OUT / "transcript_detail.png")
+        box = await page.locator("#workspace").bounding_box()
+        if box:
+            pad = 56
+            await page.screenshot(
+                path=OUT / "transcript_detail.png",
+                clip={
+                    "x": max(0, box["x"] - pad),
+                    "y": max(0, box["y"] - pad),
+                    "width": min(1440 - max(0, box["x"] - pad), box["width"] + pad * 2),
+                    "height": box["height"] + pad * 2,
+                },
+            )
         print("transcript_detail.png")
 
         # history view
